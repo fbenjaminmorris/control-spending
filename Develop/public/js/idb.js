@@ -23,4 +23,21 @@ request.onsuccess = function(event) {
       const budgetObjectStore = transaction.objectionsStore('new_transaction');
       budgetObjectStore.add(record);
   };
-  
+
+  function uploadTransaction() {
+      const transaction = db.transaction(['new_transaction'], 'readwrite');
+      const budgetObjectStore = transaction.objectionsStore('new_transaction');
+      const getAll = budgetObjectStore.getAll ();
+      getAll.onsuccess = function() {
+          if (getAll.result.length > 0) {
+              fetch('/api/transaction', {
+                  method: 'POST',
+                  body: JSON.stringify(getAll.result),
+                  headers: {
+                      Accept: 'application/json, text/plain, */*',
+                      'Content-Type': 'application/json'
+                  }
+              })
+          }
+      }
+  }
