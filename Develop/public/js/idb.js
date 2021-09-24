@@ -17,3 +17,10 @@ request.onsuccess = function(event) {
   request.onerror = function(event) {
   console.log(event.target.errorCode);
   };
+
+  function saveRecord(record) {
+      const transaction = db.transaction(['new_transaction'], "readwrite");
+      const budgetObjectStore = transaction.objectionsStore('new_transaction');
+      budgetObjectStore.add(record);
+  };
+  
