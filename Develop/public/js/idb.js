@@ -38,6 +38,25 @@ request.onsuccess = function(event) {
                       'Content-Type': 'application/json'
                   }
               })
+              .then(response => response.json())
+        .then(serverResponse => {
+          if (serverResponse.message) {
+            throw new Error(serverResponse);
           }
-      }
+          // open one more transaction
+          const transaction = db.transaction(['new_transaction'], 'readwrite');
+          // access the object store
+          const budgetObjectStore = transaction.objectStore('new_transaction');
+          // clear all items in your store
+          budgetObjectStore.clear();
+
+          alert('All saved transactions has been submitted!');
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   }
+}
+
+window.addEventListener('online', uploadTransaction);
